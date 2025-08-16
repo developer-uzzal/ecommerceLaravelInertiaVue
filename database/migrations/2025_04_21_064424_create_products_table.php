@@ -26,8 +26,10 @@ return new class extends Migration
             $table->boolean('featured')->default(false);
             $table->boolean('best_selling')->default(false);
             $table->boolean('is_active')->default(true);
-            $table->foreignId('category_id')->constrained()->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('brand_id')->constrained()->onUpdate('cascade')->onDelete('restrict');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('brand_id');
+            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreign('brand_id')->references('id')->on('brands')->cascadeOnUpdate()->restrictOnDelete();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

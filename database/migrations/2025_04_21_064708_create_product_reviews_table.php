@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('product_reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('customer_id')->references('id')->on('customer_profiles')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreign('product_id')->references('id')->on('products')->cascadeOnUpdate()->restrictOnDelete();
             $table->unsignedTinyInteger('rating');
             $table->text('des')->nullable();
             $table->timestamp('created_at')->useCurrent();

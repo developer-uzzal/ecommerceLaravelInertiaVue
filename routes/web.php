@@ -11,6 +11,7 @@ use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HeaderAndFooterController;
 use App\Http\Controllers\ShippingMethodsController;

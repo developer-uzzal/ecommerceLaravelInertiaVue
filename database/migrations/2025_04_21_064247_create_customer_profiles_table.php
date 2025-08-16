@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('customer_profiles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->restrictOnDelete();
+            $table->string('name');
+            $table->string('email')->nullable();
+            $table->string('password')->nullable();
+            $table->string('image')->nullable();
             $table->string('phone');
             $table->string('address')->nullable();
             $table->string('city')->nullable();

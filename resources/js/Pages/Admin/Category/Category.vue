@@ -68,14 +68,15 @@
                     <img :src="item.image" style="width: 50px; height: 50px">
                 </template>
                 <template #item-status="item">
-                    <span :class="item.is_active == 1 ? 'text-success' : 'text-warning'">{{ item.is_active == 1 ? 'Active' :
+                    <span :class="item.is_active == 1 ? 'text-success' : 'text-warning'">{{ item.is_active == 1 ?
+                        'Active' :
                         'Inactive' }}</span>
                 </template>
                 <template #item-number="{ id, item }">
                     <div class="d-flex align-items-center my-2">
-                        <Link class="btn btn-sm btn-secondary me-2" @click="categoryUpdateClick(id, item)" href="#"><i
+                        <button class="btn btn-sm btn-secondary me-2" @click="categoryUpdateClick(item)"><i
                             class="fa-regular fa-pen-to-square"></i>
-                        </Link>
+                        </button>
                         <Link class="btn btn-sm btn-danger" href="#" @click="itemClick(id)"><i
                             class="fa-regular fa-trash-can"></i></Link>
                     </div>
@@ -84,6 +85,51 @@
 
             </EasyDataTable>
         </div>
+
+        <!-- Modal for creating a new category -->
+        <div class="modal fade" id="exampleModalForUpdate" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header ">
+                        <h1 class="modal-title fs-5 text-center">Update category</h1>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <form @submit.prevent="submit">
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Enter name"
+                                    v-model="form.name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Image</label>
+                                <input type="file" name="image" id="" class="form-control" @change="uploadImage">
+                            </div>
+                            <div class="mb-3" v-if="form.preview">
+                                <img :src="form.preview" style="width: 200px; height: 200px">
+                            </div>
+
+                            <div class="mb-3 d-flex align-items-center">
+                                <label for="status" class="form-label">Status</label>
+                                <input type="checkbox" name="status" class="form-check" v-model="form.status">
+                            </div>
+
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -169,12 +215,52 @@ const header = [
 
 const item = ref(page.props.categories);
 
-const searchField = ['id', 'name'];
+const searchField = ['name'];
 const searchValue = ref('');
 
 
+// delete 
+
+const itemClick = (id) => {
+    router.delete('/category/' + id, {
+        onSuccess: () => {
+            if (page.props.flash.success) {
+                new Notify({
+                    status: 'success',
+                    title: page.props.flash.success.message,
+                    autotimeout: 2000,
+                })
+                router.get("/categories");
+            } else if (page.props.flash.error) {
+                new Notify({
+                    status: 'error',
+                    title: page.props.flash.error.message,
+                    autotimeout: 2000,
+                })
+            }
+        },
+
+        onError: () => {
+            new Notify({
+                status: 'error',
+                title: page.props.flash.error.message,
+                autotimeout: 2000,
+            })
+        }
+    })
+}
 
 
+// update
+const editForm = useForm({
+    name: '',
+    image: '',
+    preview: '',
+    status: false,
+});
+const categoryUpdateClick = (item) => {
+    console.log(item);
+}
 
 
 </script>

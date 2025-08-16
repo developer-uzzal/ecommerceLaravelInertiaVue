@@ -159,17 +159,11 @@ class CategoriesController extends Controller
                     Storage::disk('public')->delete($imagePath);
                 }
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Category deleted.'
-                ]);
+                return back()->with('success', ['status' => 'success', 'message' => 'Category deleted.']);
             }
         } catch (Exception $e) {
 
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 500);
+            return back()->with('error', ['status' => 'error', 'message' => $e->getMessage()]);
         }
     }
 }

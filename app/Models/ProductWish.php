@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductWish extends Model
 {
     protected $fillable = [
-        'user_id', 'product_id'
+        'customer_id', 'product_id'
     ];
 
     public function user()
