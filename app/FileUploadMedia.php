@@ -6,33 +6,29 @@ use Illuminate\Support\Facades\Storage;
 
 trait FileUploadMedia
 {
-    public static function upload( $file, $name, $dir = "others",$disk = 'public', $oldFile = null)
+    public static function upload($file, $name, $dir = "others", $disk = 'public', $oldFile = null)
     {
-        if($file){
+        if ($file) {
+            // ফাইলের নাম বানানো
+            $fileName = $name 
+                ? $name . "." . $file->getClientOriginalExtension() 
+                : $file->getClientOriginalName() . time() . "." . $file->getClientOriginalExtension();
 
-            
+            // পুরোনো ফাইল ডিলিট
+            if ($oldFile) {
+                // "storage/" prefix থাকলে সরানো
+                $oldFilePath = str_replace('storage/', '', $oldFile);
 
-            $fileName = $name ? $name . "." . $file->getClientOriginalExtension() : $file->getClientOriginalName().time().".".$file->getClientOriginalExtension();
-
-            if($oldFile){
-                str_replace(url('storage') . '/', '', $oldFile);
-                Storage::disk($disk)->delete($oldFile);
+                if (Storage::disk($disk)->exists($oldFilePath)) {
+                    Storage::disk($disk)->delete($oldFilePath);
+                }
             }
-
-
 
             $upload = $file->storeAs($dir, $fileName, $disk);
 
-            $url = 'storage/'.$upload;
-
-            
-            return $url;
-
+            return $upload;
         }
 
+        return null;
     }
-
-
-
-
 }

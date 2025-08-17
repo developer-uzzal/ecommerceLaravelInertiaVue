@@ -93,12 +93,10 @@ class CategoriesController extends Controller
 
     public function update(Request $request, $id)
     {
-
-
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'image' => 'nullable',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
             $category = Category::find($id);
@@ -110,8 +108,13 @@ class CategoriesController extends Controller
                 ], 200);
             }
 
-            $imagePath = $category->oldImage;
+            $imagePath = $category->image;
+
             if ($request->hasFile('image')) {
+                // if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                //     Storage::disk('public')->delete($imagePath);
+                // }
+
                 $imagePath1 = FileUploadMedia::upload($request->file('image'), $request->name, 'categories', 'public', $category->image);
 
                 if ($imagePath1) {
@@ -122,20 +125,14 @@ class CategoriesController extends Controller
             $category->update([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
-                'is_active' => $request->isActive ? 1 : 0,
-                'image' => $imagePath ?? $category->image,
+                'is_active' => $request->status ? 1 : 0,
+                'image' => $imagePath,
             ]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Category updated.'
-            ]);
+            return back()->with('success', ['status' => 'success', 'message' => 'Category updated successfully']);
         } catch (Exception $e) {
 
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 200);
+            return back()->with('error', ['status' => 'error', 'message' => $e->getMessage()]);
         }
     }
 

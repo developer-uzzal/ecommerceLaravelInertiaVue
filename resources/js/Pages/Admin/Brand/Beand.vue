@@ -3,7 +3,7 @@
     <div>
 
         <Head>
-            <title>Category - Admin</title>
+            <title>Brand - Admin</title>
         </Head>
         <div class="d-flex justify-content-between align-items-center">
             <h1 color="text-center"> All Category</h1>
@@ -222,10 +222,6 @@ const searchValue = ref('');
 // delete 
 
 const itemClick = (id) => {
-
-    if (!confirm("Are you sure you want to delete this category?")) {
-        return
-    }
     router.delete('/category/' + id, {
         onSuccess: () => {
             if (page.props.flash.success) {
